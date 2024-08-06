@@ -1,9 +1,11 @@
 import { FlatList, TouchableOpacity, Image, StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getLatestNews } from "../lib/api/api";
+import { getLatestNews } from "../../lib/api/api";
+import { useRouter } from "expo-router";
 
 const Home = () => {
+  const router = useRouter()
   const { data, error, isError, isSuccess, isLoading } = useQuery({
     queryKey: ["latestNews"],
     queryFn: getLatestNews,
@@ -36,7 +38,7 @@ const Home = () => {
           <TouchableOpacity
             style={styles.articleContainer}
             onPress={() => {
-              console.log("clicked");
+              router.push(`/app/news/details/${item.name}`)
             }}
           >
             {item.urlToImage && (
