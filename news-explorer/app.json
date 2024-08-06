@@ -3,6 +3,7 @@
     "name": "news-explorer",
     "slug": "news-explorer",
     "version": "1.0.0",
+    "scheme": "news-explorer",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
