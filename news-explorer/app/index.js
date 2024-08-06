@@ -1,111 +1,119 @@
-import {
-    ImageBackground,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-  } from "react-native";
-  import React from "react";
-  import { useRouter } from "expo-router";
-  
-  const Home = () => {
-    const router = useRouter();
+import { FlatList, TouchableOpacity, Image, StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getLatestNews } from "../lib/api/api";
+
+const Home = () => {
+  const { data, error, isError, isSuccess, isLoading } = useQuery({
+    queryKey: ["latestNews"],
+    queryFn: getLatestNews,
+  });
+
+  if (isLoading) {
     return (
-      <View style={styles.container}>
-        <ImageBackground
-          source={{
-            uri: "https://images.pexels.com/photos/9967888/pexels-photo-9967888.jpeg?auto=compress&cs=tinysrgb&w=1200",
-          }}
-          style={styles.backgroundImage}
-          resizeMode="cover"
-        >
-          <View style={styles.overlay}>
-            <View style={styles.header}>
-              <Text style={styles.title}>Masync News App</Text>
-            </View>
-            <View style={styles.content}>
-              <Text style={styles.subtitle}>
-                Welcome to Masync News App. Your daily dose of news, curated just
-                for you.
-              </Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  router.push("./news/home");
-                }}
-              >
-                <Text style={styles.buttonText}>Browse By Categories</Text>
-              </TouchableOpacity>
-  
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                 console.log("clicado");
-                }}
-              >
-                <Text style={styles.buttonText}>Browse By Country</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ImageBackground>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#4c669f" />
+        <Text style={styles.loadingText}>Loading...</Text>
       </View>
     );
-  };
-  
-  export default Home;
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    backgroundImage: {
-      flex: 1,
-      justifyContent: "center",
-    },
-    overlay: {
-      flex: 1,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      justifyContent: "center",
-      alignItems: "center",
-      padding: 24,
-    },
-    header: {
-      marginBottom: 20,
-    },
-    title: {
-      fontSize: 43,
-      fontWeight: "bold",
-      textAlign: "center",
-      color: "#fff",
-    },
-    content: {
-      width: "100%",
-      alignItems: "center",
-    },
-    subtitle: {
-      fontSize: 18,
-      color: "#ddd",
-      textAlign: "center",
-      marginVertical: 20,
-    },
-    button: {
-      backgroundColor: "#1e90ff",
-      paddingVertical: 12,
-      paddingHorizontal: 32,
-      borderRadius: 25,
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-      marginVertical: 10,
-    },
-    buttonText: {
-      fontSize: 16,
-      color: "#fff",
-      fontWeight: "600",
-    },
-  });
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Error: {error.message}</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Latest News</Text>
+      <FlatList
+        data={data.articles}
+        keyExtractor={(item) => item.url}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.articleContainer}
+            onPress={() => {
+              console.log("clicked");
+            }}
+          >
+            {item.urlToImage && (
+              <Image
+                source={{ uri: item.urlToImage }}
+                style={styles.articleImage}
+              />
+            )}
+            <Text style={styles.articleTitle}>{item.title}</Text>
+            <Text style={styles.articleDescription}>{item.description}</Text>
+         
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  );
+};
+
+export default Home;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#fff",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  articleContainer: {
+    padding: 16,
+    marginVertical: 8,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+  },
+  articleImage: {
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  articleTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  articleDescription: {
+    fontSize: 14,
+    color: "#555",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 8,
+    fontSize: 16,
+    color: "#4c669f",
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#d9534f",
+    textAlign: "center",
+  },
+  noResultsText: {
+    textAlign: "center",
+    fontSize: 16,
+    color: "#666",
+    marginTop: 16,
+  },
+});
