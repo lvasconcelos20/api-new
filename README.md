@@ -37,3 +37,19 @@ News Explorer é uma aplicação mobile desenvolvida com React Native que permit
 
 4. **Filtros por Data e Fonte**
    - Permite ao usuário filtrar notícias por data e fonte, proporcionando uma análise mais detalhada.
+
+
+## Tecnologias Utilizadas
+
+
+
+- Node.js
+- React Native
+- React.js para o dashboard web
+- JavaScript
+- NewsAPI
+- Styled-Components para web e Css para mobile (estilização) 
+- Axios
+- Chart.js para a construção do gráfico
+
+
