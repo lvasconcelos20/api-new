@@ -16,7 +16,7 @@ export async function getNewsByCategory(category) {
 
 export async function getLatestNews() {
   const response = await api.get(
-    `/top-headlines?q=us&apiKey=d3546759ecb442acb60dfa64f2a00fe8`
+    `/top-headlines?q=br&apiKey=d3546759ecb442acb60dfa64f2a00fe8`
   );
   return response.data;
 }
