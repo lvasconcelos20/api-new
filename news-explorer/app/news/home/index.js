@@ -30,7 +30,7 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Latest News</Text>
+      <Text style={styles.title}>Recent News</Text>
       <FlatList
         data={data.articles}
         keyExtractor={(item) => item.url}
