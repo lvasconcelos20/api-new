@@ -1,34 +1,61 @@
-import axios from "axios";
+import axios from 'axios';
 
+// Criação da instância Axios
 const api = axios.create({
-  baseURL: "https://newsapi.org/v2",
+  baseURL: 'https://newsapi.org/v2',
+  params: {
+    apiKey: 'd3546759ecb442acb60dfa64f2a00fe8' // Coloque sua chave API aqui
+  }
 });
 
-
-//searchNews
-
+// Função para buscar notícias por categoria
 export async function getNewsByCategory(category) {
-  const response = await api.get(
-    `/everything?q=${category}&apiKey=d3546759ecb442acb60dfa64f2a00fe8`
-  );
-  return response.data;
+  try {
+    const response = await api.get('/everything', {
+      params: { q: category }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar notícias por categoria:', error);
+    throw error;
+  }
 }
 
+// Função para buscar as últimas notícias
 export async function getLatestNews() {
-  const response = await api.get(
-    `/top-headlines?q=br&apiKey=d3546759ecb442acb60dfa64f2a00fe8`
-  );
-  return response.data;
+  try {
+    const response = await api.get('/top-headlines', {
+      params: { country: 'br' } // Para buscar notícias do Brasil
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar as últimas notícias:', error);
+    throw error;
+  }
 }
+
+// Função para buscar as principais notícias por país
 export async function getTopNewsByCountry(country) {
-  const response = await api.get(
-    `/top-headlines?country=${country}&apiKey=d3546759ecb442acb60dfa64f2a00fe8`
-  );
-  return response.data;
+  try {
+    const response = await api.get('/top-headlines', {
+      params: { country }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar as principais notícias por país:', error);
+    throw error;
+  }
 }
+
+// Função para buscar notícias por consulta
 export async function getNewsByQuery(query) {
-  const response = await axios.get(
-    `https://newsapi.org/v2/everything?q=${query}&apiKey=d3546759ecb442acb60dfa64f2a00fe8`
-  );
-  return response.data;
+  try {
+    const response = await api.get('/everything', {
+      params: { q: query }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar notícias por consulta:', error);
+    throw error;
+  }
 }
