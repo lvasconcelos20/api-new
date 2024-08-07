@@ -1,9 +1,9 @@
-import { Image, ScrollView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View, TouchableOpacity, Linking } from "react-native";
 import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 
 const NewsDetails = () => {
-  const { title, content, urlToImage, description, source } = useLocalSearchParams();
+  const { title, content, urlToImage, description, source, url } = useLocalSearchParams();
   const [showFullContent, setShowFullContent] = useState(false);
 
   const handleToggleContent = () => {
@@ -12,12 +12,20 @@ const NewsDetails = () => {
 
   const displayContent = showFullContent ? content : `${content?.substring(0, 200)}...`;
 
+  // Função para abrir a URL
+  const handleOpenURL = () => {
+    if (url) {
+      Linking.openURL(url);
+    }
+  };
+
   console.log({
     title,
     content,
     urlToImage,
     description,
     source,
+    url,
   });
 
   return (
@@ -26,7 +34,7 @@ const NewsDetails = () => {
       {urlToImage && (
         <Image source={{ uri: urlToImage }} style={styles.image} />
       )}
-      <Text style={styles.source}>Fonts: {source}</Text>
+      <Text style={styles.source}>Fonte: {source}</Text>
       <Text style={styles.description}>{description}</Text>
       <Text style={styles.content}>{displayContent}</Text>
       {content?.length > 200 && (
@@ -34,6 +42,11 @@ const NewsDetails = () => {
           <Text style={styles.showMoreButton}>
             {showFullContent ? "Mostrar menos" : "Ver mais"}
           </Text>
+        </TouchableOpacity>
+      )}
+      {url && (
+        <TouchableOpacity style={styles.readMoreButton} onPress={handleOpenURL}>
+          <Text style={styles.readMoreButtonText}>Ler mais</Text>
         </TouchableOpacity>
       )}
     </ScrollView>
@@ -81,5 +94,16 @@ const styles = StyleSheet.create({
     color: "#1e90ff",
     textAlign: "center",
     marginTop: 10,
+  },
+  readMoreButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#1e90ff",
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  readMoreButtonText: {
+    color: "#fff",
+    fontSize: 16,
   },
 });
