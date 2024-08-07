@@ -52,38 +52,44 @@ const Dashboard = () => {
   const [barChartData, setBarChartData] = useState({});
 
   const fetchNewsData = async () => {
-    const data = await getNewsByQuery(keyword, fromDate, toDate, source);
-    
-    if (data.articles) {
-      const dates = data.articles.map(article => article.publishedAt.split('T')[0]);
-      const uniqueDates = [...new Set(dates)];
-      const articlesCount = uniqueDates.map(date => dates.filter(d => d === date).length);
-
-      setLineChartData({
-        labels: uniqueDates,
-        datasets: [{
-          label: 'Número de notícias',
-          data: articlesCount,
-          borderColor: 'rgba(75,192,192,1)',
-          fill: false,
-        }]
-      });
-
-      const sourcesCount = data.articles.reduce((acc, article) => {
-        acc[article.source.name] = (acc[article.source.name] || 0) + 1;
-        return acc;
-      }, {});
-      const sourceLabels = Object.keys(sourcesCount);
-      const sourceValues = Object.values(sourcesCount);
-
-      setBarChartData({
-        labels: sourceLabels,
-        datasets: [{
-          label: 'Notícias por fonte',
-          data: sourceValues,
-          backgroundColor: 'rgba(75,192,192,0.4)',
-        }]
-      });
+    try {
+      const data = await getNewsByQuery(keyword, fromDate, toDate, source);
+  
+      if (data && data.articles) {
+        const dates = data.articles.map(article => article.publishedAt.split('T')[0]);
+        const uniqueDates = [...new Set(dates)];
+        const articlesCount = uniqueDates.map(date => dates.filter(d => d === date).length);
+  
+        setLineChartData({
+          labels: uniqueDates,
+          datasets: [{
+            label: 'Número de notícias',
+            data: articlesCount,
+            borderColor: 'rgba(75,192,192,1)',
+            fill: false,
+          }]
+        });
+  
+        const sourcesCount = data.articles.reduce((acc, article) => {
+          acc[article.source.name] = (acc[article.source.name] || 0) + 1;
+          return acc;
+        }, {});
+        const sourceLabels = Object.keys(sourcesCount);
+        const sourceValues = Object.values(sourcesCount);
+  
+        setBarChartData({
+          labels: sourceLabels,
+          datasets: [{
+            label: 'Notícias por fonte',
+            data: sourceValues,
+            backgroundColor: 'rgba(75,192,192,0.4)',
+          }]
+        });
+      } else {
+        console.error('A resposta da API não contém a propriedade articles.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados:', error);
     }
   };
 

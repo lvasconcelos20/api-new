@@ -2,19 +2,24 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: "https://newsapi.org/v2",
+  params: {
+    apiKey: "4025d8985c6742f7a37ab602b135bdd5"
+  }
 });
 
-const API_KEY = "d3546759ecb442acb60dfa64f2a00fe8";
-
 export async function getNewsByQuery(query, from, to, sources) {
-  const response = await api.get(`/everything`, {
-    params: {
-      q: query,
-      from,
-      to,
-      sources,
-      apiKey: API_KEY,
-    },
-  });
-  return response.data;
+  try {
+    const response = await api.get(`/everything`, {
+      params: {
+        q: query,
+        from,
+        to,
+        sources
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar notícias por consulta:', error.response?.data || error.message);
+    throw error;
+  }
 }
