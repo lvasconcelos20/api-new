@@ -41,7 +41,7 @@ const AllCategories = () => {
       colors={["#4c669f", "#3b5998", "#192f6a"]}
       style={styles.container}
     >
-      <Text style={styles.title}>Categories</Text>
+      <Text style={styles.title}>Categorias</Text>
       <FlatList
         data={categories}
         keyExtractor={(item) => item.id}
