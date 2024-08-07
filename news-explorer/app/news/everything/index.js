@@ -62,7 +62,7 @@ const AllNews = () => {
           onChangeText={setQuery}
         />
         <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-          <Text style={styles.searchButtonText}>Buscar</Text>
+          <Text style={styles.searchButtonText}>Seach</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.recentSearchesContainer}>
