@@ -53,6 +53,7 @@ const NewsByCategory = () => {
                   title: item.title,
                   description: item.description,
                   content: item.content,
+                  url: item.url,
                   urlToImage: item.urlToImage,
                 },
               });
