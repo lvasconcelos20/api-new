@@ -1,8 +1,12 @@
+import React from "react";
+import Dashboard from "../components/Dashboard";
 
-import LineChart from "@/components/LineChart";
-
-export default function Home() {
+function App() {
   return (
-    <LineChart/>
+    <div className="App">
+      <Dashboard />
+    </div>
   );
 }
+
+export default App;
