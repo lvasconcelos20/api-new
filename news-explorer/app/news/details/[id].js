@@ -26,7 +26,7 @@ const NewsDetails = () => {
       {urlToImage && (
         <Image source={{ uri: urlToImage }} style={styles.image} />
       )}
-      <Text style={styles.source}>Fonte: {source}</Text>
+      <Text style={styles.source}>Fonts: {source}</Text>
       <Text style={styles.description}>{description}</Text>
       <Text style={styles.content}>{displayContent}</Text>
       {content?.length > 200 && (
