@@ -1,7 +1,7 @@
 import { FlatList, TouchableOpacity, Image, StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getLatestNews } from "../../lib/api/api";
+import { getLatestNews } from "../../../lib/api/api";
 import { useRouter } from "expo-router";
 
 const Home = () => {
@@ -38,7 +38,17 @@ const Home = () => {
           <TouchableOpacity
             style={styles.articleContainer}
             onPress={() => {
-              router.push(`/app/news/details/${item.name}`)
+              router.push({
+              pathname: `/news/details/[id]${encodeURIComponent(item.id)}`,
+              params: {
+                  title: item.title,
+                  description: item.description,
+                  urlToImage: item.urlToImage,
+                  url: item.url,
+                  publishedAt: item.publishedAt,
+                  author: item.author,
+                  source: item.source.name,
+              },})
             }}
           >
             {item.urlToImage && (

@@ -9,10 +9,12 @@ export default function RootLayout() {
     return (
         <QueryClientProvider client = {queryClient}>
                <Tabs>
-                <Tabs.Screen name="home/index" options={{title: "Home", headerShown: false, tabBarIcon: ({color}) => (<Materialicons name="home" size={40} color={color} />),  tabBarLabelStyle: { fontSize: 12 }, }} />
-                <Tabs.Screen name="news/categories/index" options={{title: "Search News", headerShown: false, tabBarIcon: ({ color }) => (<Materialicons name="search" size={40} color={color} />), tabBarLabelStyle: { fontSize: 12 },}}/>
-                <Tabs.Screen name="news/categories/[newsByCategory]" options={{title: "Search News", headerShown: false, tabBarIcon: ({ color }) => (<Materialicons name="category" size={40} color={color} />), tabBarLabelStyle: { fontSize: 12 },}}/>
-                <Tabs.Screen name="home/details/index" options={{title: "Details", headerShown: false, tabBarIcon: ({ color }) => (<AntDesign name="eyeo" size={36} color={color} />), tabBarLabelStyle: { fontSize: 12 },}}/>
+                <Tabs.Screen name="news/home/index" options={{title: "Home", headerShown: false, tabBarIcon: ({color}) => (<Materialicons name="home" size={40} color={color} />),  tabBarLabelStyle: { fontSize: 12 }, }} />
+                <Tabs.Screen name="news/everything/index" options={{title: "Search", headerShown: false, tabBarIcon: ({ color }) => (<Materialicons name="search" size={40} color={color} />), tabBarLabelStyle: { fontSize: 12 },}}/>
+                <Tabs.Screen name="news/categories/index" options={{title: "Categories", headerShown: false, tabBarIcon: ({ color }) => (<Materialicons name="flag" size={40} color={color} />), tabBarLabelStyle: { fontSize: 12 },}}/>   
+                 <Tabs.Screen name="news/categories/[newsByCategory]" options={{ href: null, headerShown: false,}}/>
+                <Tabs.Screen name="news/details/[id]" options={{ href: null, headerShown: false,}}/>
+             
 
             </Tabs>
 
