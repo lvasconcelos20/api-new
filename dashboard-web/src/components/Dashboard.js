@@ -1,67 +1,109 @@
-import React, { useState } from "react";
-import LineChart from "./LineChart";
-import getFakeNewsTrends from "../data/fakeData";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+"use client";
+
+import React, { useState } from 'react';
+import { Line, Bar } from 'react-chartjs-2';
+import { getNewsByQuery } from '../lib/api';
+import 'chart.js/auto';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  padding: 20px;
+  font-family: Arial, sans-serif;
+`;
+
+const InputContainer = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  &:focus {
+    border-color: #66afe9;
+    outline: none;
+    box-shadow: 0 0 8px rgba(102, 175, 233, 0.6);
+  }
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover {
+    background-color: #218838;
+  }
+`;
 
 const Dashboard = () => {
-  const [keyword, setKeyword] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [chartData, setChartData] = useState([]);
+  const [keyword, setKeyword] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [source, setSource] = useState('');
+  const [lineChartData, setLineChartData] = useState({});
+  const [barChartData, setBarChartData] = useState({});
 
-  const handleSearch = async () => {
-    // Usar getFakeNewsTrends ou uma função real para buscar dados
-    const data = await getFakeNewsTrends(keyword, startDate, endDate);
-    setChartData(data);
+  const fetchNewsData = async () => {
+    const data = await getNewsByQuery(keyword, fromDate, toDate, source);
+    
+    if (data.articles) {
+      const dates = data.articles.map(article => article.publishedAt.split('T')[0]);
+      const uniqueDates = [...new Set(dates)];
+      const articlesCount = uniqueDates.map(date => dates.filter(d => d === date).length);
+
+      setLineChartData({
+        labels: uniqueDates,
+        datasets: [{
+          label: 'Número de notícias',
+          data: articlesCount,
+          borderColor: 'rgba(75,192,192,1)',
+          fill: false,
+        }]
+      });
+
+      const sourcesCount = data.articles.reduce((acc, article) => {
+        acc[article.source.name] = (acc[article.source.name] || 0) + 1;
+        return acc;
+      }, {});
+      const sourceLabels = Object.keys(sourcesCount);
+      const sourceValues = Object.values(sourcesCount);
+
+      setBarChartData({
+        labels: sourceLabels,
+        datasets: [{
+          label: 'Notícias por fonte',
+          data: sourceValues,
+          backgroundColor: 'rgba(75,192,192,0.4)',
+        }]
+      });
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Dashboard de Tendências de Notícias</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Palavra-chave"
-        value={keyword}
-        onChangeText={setKeyword}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Data de Início (YYYY-MM-DD)"
-        value={startDate}
-        onChangeText={setStartDate}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Data de Fim (YYYY-MM-DD)"
-        value={endDate}
-        onChangeText={setEndDate}
-      />
-      <Button title="Buscar" onPress={handleSearch} />
-      {chartData.length > 0 && <LineChart data={chartData} />}
-    </View>
+    <Container>
+      <InputContainer>
+        <Input type="text" placeholder="Palavra-chave" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+        <Input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+        <Input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+        <Input type="text" placeholder="Fonte" value={source} onChange={(e) => setSource(e.target.value)} />
+        <Button onClick={fetchNewsData}>Buscar</Button>
+      </InputContainer>
+      <div>
+        {lineChartData.labels ? <Line data={lineChartData} /> : <p>No data available</p>}
+      </div>
+      <div>
+        {barChartData.labels ? <Bar data={barChartData} /> : <p>No data available</p>}
+      </div>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#f0f4f7",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  input: {
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-});
 
 export default Dashboard;
