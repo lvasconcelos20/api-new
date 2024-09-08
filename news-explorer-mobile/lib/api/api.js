@@ -4,6 +4,10 @@ const api = axios.create({
   baseURL: "https://newsapi.org/v2",
 });
 
+const backendApi = axios.create({
+  baseURL: "http://localhost:5000/api", 
+});
+
 
 //searchNews
 
